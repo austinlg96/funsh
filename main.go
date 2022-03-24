@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
 	"time"
@@ -38,11 +39,10 @@ type ResponseDetails struct {
 
 func ask(c *Challenge) *ResponseDetails {
 	start := time.Now()
-
-	fmt.Println(c.question)
+	fmt.Println("Q: " + c.question)
 	var response string
+	fmt.Print("A: ")
 	fmt.Scanln(&response)
-
 	end := time.Now()
 
 	rd := ResponseDetails{c, response, start, end}
@@ -71,6 +71,9 @@ func check(rd *ResponseDetails) mode {
 		fmt.Println("Goodbye.")
 		os.Exit(2)
 	} else if hexxed_response {
+		if rd.response == "0" {
+			return empty
+		}
 		return hexxed
 	} else if correct {
 		return normal
@@ -198,7 +201,7 @@ var level5 Level = Level{
 
 // Level 6: Order of operations.
 var level6 Level = Level{
-	"Congratulations, you passed Level 5.\nNext round is going to be A LOT bigger.",
+	"Congratulations, you passed Level 6.\nNext round is going to be A LOT bigger.",
 	[]Challenge{
 		{"3*2+7", "13", 6789},
 		{"9+6*3", "27", 6789},
@@ -228,11 +231,109 @@ func gen_level7() *[]Challenge {
 }
 
 var level7 Level = Level{
-	"Congratulations, you passed Level 7.",
+	"Congratulations, you passed Level 7.\nNot even I know what's coming up next. No, seriously.",
 	*gen_level7(),
 }
 
+// Level 8: First random level.
+func gen_level8() *[]Challenge {
+	var output []Challenge
+	for i := 1; i <= 10; i++ {
+		arg1 := rand.Intn(97) + 1
+		arg2 := rand.Intn(98) + 1
+		sum := arg1 + arg2
+		question := fmt.Sprintf("%d+%d", arg1, arg2)
+		answer := fmt.Sprint(sum)
+		output = append(output, Challenge{question, answer, 10000})
+	}
+	return &output
+}
+
+var level8 Level = Level{
+	"Congratulations, you passed Level 8.\nWe're gonna speed it up again.",
+	*gen_level8(),
+}
+
+// Level 9: Fast random level.
+func gen_level9() *[]Challenge {
+	var output []Challenge
+	for i := 1; i <= 1000; i++ {
+		arg1 := rand.Intn(97) + 1
+		arg2 := rand.Intn(98) + 1
+		sum := arg1 + arg2
+		question := fmt.Sprintf("%d+%d", arg1, arg2)
+		answer := fmt.Sprint(sum)
+		output = append(output, Challenge{question, answer, 2000})
+	}
+	return &output
+}
+
+var level9 Level = Level{
+	"Congratulations, you passed Level 9.\nNext round is going to pretty similar....but watch out for the curveballs.",
+	*gen_level9(),
+}
+
+// Level 10: Fast random level again but with wildcards.
+func gen_level10_helper_meta() func(int) string {
+	var bash_ps_exit_q int = (rand.Intn(80) + 20)
+	var bash_ps_exit_str string = "exit"
+
+	var python_exit_q int = rand.Intn(100) + 100
+	var python_exit_str string = "exit()"
+
+	var js_exit_q int = rand.Intn(100) + 200
+	var js_exit_str string = "throw new Error('Hm')"
+
+	var php_exit_q int = rand.Intn(100) + 300
+	var php_exit_str string = "die('Hm'"
+
+	var return_q int = rand.Intn(100) + 400
+	var reuturn_str string = "return"
+
+	return func(i int) string {
+		prefix := ""
+		switch i {
+		case bash_ps_exit_q:
+			prefix = bash_ps_exit_str
+		case python_exit_q:
+			prefix = python_exit_str
+		case js_exit_q:
+			prefix = js_exit_str
+		case php_exit_q:
+			prefix = php_exit_str
+		case return_q:
+			prefix = reuturn_str
+		default:
+			return ""
+		}
+		return prefix + "\n"
+
+	}
+
+}
+
+func gen_level10() *[]Challenge {
+	gen_level10_helper := gen_level10_helper_meta()
+	var output []Challenge
+	for i := 1; i <= 1000; i++ {
+		arg1 := rand.Intn(97) + 1
+		arg2 := rand.Intn(98) + 1
+		sum := arg1 + arg2
+		question := fmt.Sprintf("%d+%d", arg1, arg2)
+		question = gen_level10_helper(i) + question
+		answer := fmt.Sprint(sum)
+		output = append(output, Challenge{question, answer, 2000})
+	}
+	return &output
+}
+
+var level10 Level = Level{
+	"Congratulations, you passed Level 10!\nflag:1234567890",
+	*gen_level10(),
+}
+
 func main() {
+	fmt.Println("Shell challenge. Beta 1")
 	_ = run_level(&level1)
 	for i := 1; i <= 3; i++ {
 		fmt.Scanln()
@@ -248,4 +349,7 @@ func main() {
 	_ = run_level(&level5)
 	_ = run_level(&level6)
 	_ = run_level(&level7)
+	_ = run_level(&level8)
+	_ = run_level(&level9)
+	_ = run_level(&level10)
 }
