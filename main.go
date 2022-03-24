@@ -151,7 +151,7 @@ var level5 Level = Level{
 	},
 }
 
-// Level 6:
+// Level 6: Order of operations.
 var level6 Level = Level{
 	"Congratulations, you passed Level 5.\nNext round is going to be A LOT bigger.",
 	[]Challenge{
@@ -168,6 +168,26 @@ var level6 Level = Level{
 	},
 }
 
+// Level 7: Lots of simple math.
+func gen_level7() *[]Challenge {
+	var output []Challenge
+	for i := 1; i <= 100; i++ {
+		arg1 := i % 7
+		arg2 := i % 11
+		sum := arg1 + arg2
+		question := fmt.Sprintf("%d+%d", arg1, arg2)
+		answer := fmt.Sprint(sum)
+		fmt.Println(sum)
+		output = append(output, Challenge{question, answer, 10000})
+	}
+	return &output
+}
+
+var level7 Level = Level{
+	"Congratulations, you passed Level 7.",
+	*gen_level7(),
+}
+
 func main() {
 	_ = run_level(&level1)
 	for i := 1; i <= 3; i++ {
@@ -182,5 +202,6 @@ func main() {
 	_ = run_level(&level3)
 	_ = run_level(&level4)
 	_ = run_level(&level5)
-
+	_ = run_level(&level6)
+	_ = run_level(&level7)
 }
