@@ -136,7 +136,7 @@ var level4 Level = Level{
 
 // Level 5: Slow multiplication
 var level5 Level = Level{
-	"Congratulations, you passed Level 5.\nWe're just getting started.",
+	"Congratulations, you passed Level 5.\nDon't forget PEMDAS.",
 	[]Challenge{
 		{"45*54", "2430", 10000},
 		{"82*5", "410", 10000},
@@ -148,6 +148,23 @@ var level5 Level = Level{
 		{"65*43", "2795", 10000},
 		{"2*35", "70", 10000},
 		{"51*25", "1275", 10000},
+	},
+}
+
+// Level 6:
+var level6 Level = Level{
+	"Congratulations, you passed Level 5.\nNext round is going to be A LOT bigger.",
+	[]Challenge{
+		{"3*2+7", "13", 6789},
+		{"9+6*3", "27", 6789},
+		{"1*0+6", "6", 6789},
+		{"7+9*6", "61", 6789},
+		{"2*4+3", "11", 6789},
+		{"7*4+3", "31", 6789},
+		{"6*3+5", "23", 6789},
+		{"1*4+7", "11", 6789},
+		{"0*7+1", "1", 6789},
+		{"4+5*6", "34", 6789},
 	},
 }
 
