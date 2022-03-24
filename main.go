@@ -3,15 +3,20 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
-type mode int64
+type mode string
 
 const (
-	normal mode = 1
-	funky       = 7
+	empty  mode = "empty"
+	normal mode = "normal"
+	slow   mode = "slow"
+	hexxed mode = "hexxed"
 )
+
+const long_mode_time int64 = 30000
 
 type Challenge struct {
 	question string
@@ -45,23 +50,63 @@ func ask(c *Challenge) *ResponseDetails {
 	return &rd
 }
 
-func check(rd *ResponseDetails) {
+func hex(answer string) string {
+	int_answer, _ := strconv.Atoi(answer)
+	hex_int_answer := 6 * int_answer
+	hex_str_answer := strconv.Itoa(hex_int_answer)
+	return hex_str_answer
+}
+
+func check(rd *ResponseDetails) mode {
 	response_time := rd.end.Sub(rd.start).Milliseconds()
-	if response_time >= rd.challenge.cutoff {
+	correct := rd.response == rd.challenge.answer
+	slow_response := response_time > long_mode_time
+	timely_response := response_time <= rd.challenge.cutoff
+	hexxed_response := rd.response == hex(rd.challenge.answer)
+
+	if slow_response {
+		return slow
+	} else if !timely_response {
 		fmt.Printf("Sorry, you must answer within %d milliseconds.n", rd.challenge.cutoff)
 		fmt.Println("Goodbye.")
 		os.Exit(2)
-	} else if rd.response != rd.challenge.answer {
+	} else if hexxed_response {
+		return hexxed
+	} else if correct {
+		return normal
+	} else {
 		fmt.Println("Sorry, this is not an acceptable response.")
 		fmt.Println("Goodbye.")
 		os.Exit(3)
 	}
+	return empty
+}
+
+func check_modes(m mode, n mode) mode {
+	// Checks if the modes match or if one of them is empty. Returns the non-empty mode.
+	if m == empty {
+		return n
+	} else if n == empty {
+		return m
+	} else if m == n {
+		return m
+	} else {
+		fmt.Println("Hmmm, something doesn't seem right here.")
+		fmt.Println("Goodbye.")
+		os.Exit(4)
+	}
+	return empty
 }
 
 func run_level(l *Level) bool {
+	var m mode = empty
 	for _, c := range l.challenges {
-		check(ask(&c))
+		// Check the mode that a response would be valid for.
+		user_mode := check(ask(&c))
+		// Error if that mode is incompatible with the current mode
+		m = check_modes(user_mode, m)
 	}
+
 	fmt.Println(l.congrats_msg)
 	return true
 }
@@ -177,7 +222,6 @@ func gen_level7() *[]Challenge {
 		sum := arg1 + arg2
 		question := fmt.Sprintf("%d+%d", arg1, arg2)
 		answer := fmt.Sprint(sum)
-		fmt.Println(sum)
 		output = append(output, Challenge{question, answer, 10000})
 	}
 	return &output
