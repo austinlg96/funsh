@@ -39,10 +39,10 @@ type ResponseDetails struct {
 
 func ask(c *Challenge) *ResponseDetails {
 	start := time.Now()
-	fmt.Println("Q: " + c.question)
+	myfmt.Println("Q: " + c.question)
 	var response string
-	fmt.Print("A: ")
-	fmt.Scanln(&response)
+	myfmt.Print("A: ")
+	myfmt.Scanln(&response)
 	end := time.Now()
 
 	rd := ResponseDetails{c, response, start, end}
@@ -67,8 +67,8 @@ func check(rd *ResponseDetails) mode {
 	if slow_response {
 		return slow
 	} else if !timely_response {
-		fmt.Printf("Sorry, you must answer within %d milliseconds.\n", rd.challenge.cutoff)
-		fmt.Println("Goodbye.")
+		myfmt.Printf("Sorry, you must answer within %d milliseconds.\n", rd.challenge.cutoff)
+		myfmt.Println("Goodbye.")
 		os.Exit(2)
 	} else if hexxed_response {
 		if rd.response == "0" {
@@ -78,8 +78,8 @@ func check(rd *ResponseDetails) mode {
 	} else if correct {
 		return normal
 	} else {
-		fmt.Println("Sorry, this is not an acceptable response.")
-		fmt.Println("Goodbye.")
+		myfmt.Println("Sorry, this is not an acceptable response.")
+		myfmt.Println("Goodbye.")
 		os.Exit(3)
 	}
 	return empty
@@ -94,8 +94,8 @@ func check_modes(m mode, n mode) mode {
 	} else if m == n {
 		return m
 	} else {
-		fmt.Println("Hmmm, something doesn't seem right here.")
-		fmt.Println("Goodbye.")
+		myfmt.Println("Hmmm, something doesn't seem right here.")
+		myfmt.Println("Goodbye.")
 		os.Exit(4)
 	}
 	return empty
@@ -110,7 +110,7 @@ func run_level(l *Level) bool {
 		m = check_modes(user_mode, m)
 	}
 
-	fmt.Println(l.congrats_msg)
+	myfmt.Println(l.congrats_msg)
 	return true
 }
 
@@ -223,8 +223,8 @@ func gen_level7() *[]Challenge {
 		arg1 := i % 7
 		arg2 := i % 11
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
-		answer := fmt.Sprint(sum)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 10000})
 	}
 	return &output
@@ -242,8 +242,8 @@ func gen_level8() *[]Challenge {
 		arg1 := rand.Intn(97) + 1
 		arg2 := rand.Intn(98) + 1
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
-		answer := fmt.Sprint(sum)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 10000})
 	}
 	return &output
@@ -261,8 +261,8 @@ func gen_level9() *[]Challenge {
 		arg1 := rand.Intn(97) + 1
 		arg2 := rand.Intn(98) + 1
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
-		answer := fmt.Sprint(sum)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 2000})
 	}
 	return &output
@@ -319,9 +319,9 @@ func gen_level10() *[]Challenge {
 		arg1 := rand.Intn(97) + 1
 		arg2 := rand.Intn(98) + 1
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
 		question = gen_level10_helper(i) + question
-		answer := fmt.Sprint(sum)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 2000})
 	}
 	return &output
@@ -333,16 +333,18 @@ var level10 Level = Level{
 }
 
 func main() {
-	fmt.Println("Shell challenge. Beta 1")
+	myfmt.Println("Shell challenge. Beta 1")
 	_ = run_level(&level1)
 	for i := 1; i <= 3; i++ {
+		//fmt.Scanln OK
 		fmt.Scanln()
 	}
-	fmt.Println("Oh, there's more here? Interesting....")
+	myfmt.Println("Oh, there's more here? Interesting....")
 	for i := 1; i <= 7; i++ {
+		//fmt.Scanln OK
 		fmt.Scanln()
 	}
-	fmt.Println("Let's start Level 2, I guess.")
+	myfmt.Println("Let's start Level 2, I guess.")
 	_ = run_level(&level2)
 	_ = run_level(&level3)
 	_ = run_level(&level4)
