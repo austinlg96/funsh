@@ -67,7 +67,7 @@ func check(rd *ResponseDetails) mode {
 	if slow_response {
 		return slow
 	} else if !timely_response {
-		fmt.Printf("Sorry, you must answer within %d milliseconds.n", rd.challenge.cutoff)
+		fmt.Printf("Sorry, you must answer within %d milliseconds.\n", rd.challenge.cutoff)
 		fmt.Println("Goodbye.")
 		os.Exit(2)
 	} else if hexxed_response {
