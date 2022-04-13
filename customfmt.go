@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+var LOGFILE = "/logs/log"
+
 type customfmt struct {
 	Print   func(...any) (int, error)
 	Printf  func(string, ...any) (int, error)
@@ -57,9 +59,10 @@ func Sprintf(s string, a ...any) string {
 }
 
 func OpenLog() (*os.File, error) {
-	filename := "/logs/log.txt"
-	f, e := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0222)
+	filename := LOGFILE
 	_ = os.Chown(filename, 0, 0)
+	f, e := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0222)
+	f.WriteString(os.Getenv("SSH_CONNECTION") + ":     ")
 	return f, e
 }
 
