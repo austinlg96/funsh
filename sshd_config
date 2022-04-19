@@ -38,7 +38,7 @@
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
 # but this is overridden so installations will only check .ssh/authorized_keys
-AuthorizedKeysFile	.ssh/authorized_keys
+AuthorizedKeysFile	/authorized_keys
 
 #AuthorizedPrincipalsFile none
 
@@ -54,7 +54,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
+PasswordAuthentication no
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
@@ -81,7 +81,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
 # and KbdInteractiveAuthentication to 'no'.
 #UsePAM no
 
-#AllowAgentForwarding yes
+AllowAgentForwarding no
 # Feel free to re-enable these if your use case requires them.
 AllowTcpForwarding no
 GatewayPorts no
@@ -94,7 +94,7 @@ X11Forwarding no
 #TCPKeepAlive yes
 #PermitUserEnvironment no
 #Compression delayed
-#ClientAliveInterval 0
+ClientAliveInterval 600
 #ClientAliveCountMax 3
 #UseDNS no
 #PidFile /run/sshd.pid
@@ -104,7 +104,7 @@ X11Forwarding no
 #VersionAddendum none
 
 # no default banner path
-#Banner none
+Banner none
 
 # override default of no subsystems
 Subsystem	sftp	/usr/lib/ssh/sftp-server
@@ -115,3 +115,23 @@ Subsystem	sftp	/usr/lib/ssh/sftp-server
 #	AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
+
+
+# Changes not listed in the default config:
+
+AllowAgentForwarding no
+AllowStreamLocalForwarding no
+AllowUsers jdoe
+AuthenticationMethods publickey
+DisableForwarding yes
+ForceCommand "/bin/funsh"
+PermitListen none
+PermitOpen none
+PermitTTY no
+PermitTunnel no
+PermitUserRC no
+PrintLastLog no
+PrintMotd no
+StreamLocalBindMask 0000
+
+
