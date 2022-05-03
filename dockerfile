@@ -6,7 +6,11 @@ RUN apk add openssh
 
 RUN mkdir /logs
 
+RUN chmod 003 /logs
+
 RUN touch /logs/log
+
+RUN chmod 222 /logs/log
 
 ADD --chown=root:root ./main /bin/funsh
 
@@ -16,7 +20,13 @@ ADD --chown=root:root ./keys/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
 
 RUN chmod 600 /etc/ssh/ssh_host_rsa_key
 
-RUN adduser --disabled-password --gecos "John Doe" --uid 4357 --shell /bin/funsh --no-create-home jdoe
+RUN adduser --disabled-password --gecos "John Doe" --uid 4357 --shell /bin/funsh jdoe
+
+RUN chown -R root:root /home/jdoe
+
+RUN chmod -R 000 /home/jdoe
+
+RUN chmod 001 /home/jdoe
 
 RUN sed -i 's/jdoe:!:/jdoe:\*:/g' /etc/shadow
 
