@@ -26,4 +26,4 @@ RUN chmod 644 /authorized_keys
 
 ADD --chown=root:root ./sshd_config /etc/ssh/sshd_config 
 
-ENTRYPOINT ["/usr/sbin/sshd","-D","-p","2222"]
+ENTRYPOINT ["/usr/sbin/sshd","-D","-p","22"]
