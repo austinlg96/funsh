@@ -127,7 +127,7 @@ DisableForwarding yes
 ForceCommand "/bin/funsh"
 PermitListen none
 PermitOpen none
-PermitTTY no
+# PermitTTY no
 PermitTunnel no
 PermitUserRC no
 PrintLastLog no
