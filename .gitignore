@@ -1,1 +1,7 @@
+main
+
 *.exe
+
+*image*.tar
+
+keys/*
