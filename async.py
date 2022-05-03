@@ -1,8 +1,16 @@
 import asyncio
+import sys
+import time
+
+LEVEL1FLAG = "flag{level1flag}"
+LEVEL2FLAG = "flag{level2flag}"
+NORMALFLAG = "flag{normalflag}"
+SLOWFLAG = "flag{slowflag}"
+HEXFLAG = "flag{hexflag}"
 
 async def main():
     proc = await asyncio.subprocess.create_subprocess_exec(
-        "go","run","./main.go", stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE
+        "ssh", "sshuser@192.168.134.131", stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE
     )
     while True:
         line = (await proc.stdout.readline()).decode()
@@ -11,10 +19,11 @@ async def main():
             x=eval(line[3:])
             print((await proc.stdout.read(3)).decode(), end ="")
             print(f"{x}")
+            time.sleep(5)
             proc.stdin.write(f"{x}\n".encode())
-        if line == "Flag:abcdefghijklmnop\n":
+        if line == LEVEL1FLAG+"\n":
             break
-    proc.stdin.write(("\n"*10).encode())
+    # proc.stdin.write(("\n"*10).encode())
     while True:
         line = (await proc.stdout.readline()).decode()
         print(line,end="")
@@ -25,6 +34,7 @@ async def main():
             x=eval(line[3:])
             print((await proc.stdout.read(3)).decode(), end ="")
             print(f"{x}")
+            time.sleep(5)
             proc.stdin.write(f"{x}\n".encode())
         # line = (asyncio.wait_for(proc.stdout.readline(), 0.5)).decode()
 

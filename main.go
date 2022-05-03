@@ -17,7 +17,16 @@ const (
 	hexxed mode = "hexxed"
 )
 
-const long_mode_time int64 = 30000
+type flag string
+
+var (
+	flagFormat string = "flag{%s}"
+	level1Flag flag   = flag(fmt.Sprintf(flagFormat, "level1flag"))
+	level2Flag flag   = flag(fmt.Sprintf(flagFormat, "level2flag"))
+	normalFlag flag   = flag(fmt.Sprintf(flagFormat, "normalflag"))
+	slowFlag   flag   = flag(fmt.Sprintf(flagFormat, "slowflag"))
+	hexFlag    flag   = flag(fmt.Sprintf(flagFormat, "hexflag"))
+)
 
 type Challenge struct {
 	question string
@@ -39,10 +48,10 @@ type ResponseDetails struct {
 
 func ask(c *Challenge) *ResponseDetails {
 	start := time.Now()
-	fmt.Println("Q: " + c.question)
+	myfmt.Println("Q: " + c.question)
 	var response string
-	fmt.Print("A: ")
-	fmt.Scanln(&response)
+	myfmt.Print("A: ")
+	myfmt.Scanln(&response)
 	end := time.Now()
 
 	rd := ResponseDetails{c, response, start, end}
@@ -57,6 +66,8 @@ func hex(answer string) string {
 	return hex_str_answer
 }
 
+const long_mode_time int64 = 5000
+
 func check(rd *ResponseDetails) mode {
 	response_time := rd.end.Sub(rd.start).Milliseconds()
 	correct := rd.response == rd.challenge.answer
@@ -67,8 +78,8 @@ func check(rd *ResponseDetails) mode {
 	if slow_response {
 		return slow
 	} else if !timely_response {
-		fmt.Printf("Sorry, you must answer within %d milliseconds.\n", rd.challenge.cutoff)
-		fmt.Println("Goodbye.")
+		myfmt.Printf("Sorry, you must answer within %d milliseconds.\n", rd.challenge.cutoff)
+		myfmt.Println("Goodbye.")
 		os.Exit(2)
 	} else if hexxed_response {
 		if rd.response == "0" {
@@ -78,8 +89,8 @@ func check(rd *ResponseDetails) mode {
 	} else if correct {
 		return normal
 	} else {
-		fmt.Println("Sorry, this is not an acceptable response.")
-		fmt.Println("Goodbye.")
+		myfmt.Println("Sorry, this is not an acceptable response.")
+		myfmt.Println("Goodbye.")
 		os.Exit(3)
 	}
 	return empty
@@ -94,14 +105,14 @@ func check_modes(m mode, n mode) mode {
 	} else if m == n {
 		return m
 	} else {
-		fmt.Println("Hmmm, something doesn't seem right here.")
-		fmt.Println("Goodbye.")
+		myfmt.Println("Hmmm, something doesn't seem right here.")
+		myfmt.Println("Goodbye.")
 		os.Exit(4)
 	}
 	return empty
 }
 
-func run_level(l *Level) bool {
+func run_level(l *Level) mode {
 	var m mode = empty
 	for _, c := range l.challenges {
 		// Check the mode that a response would be valid for.
@@ -110,13 +121,13 @@ func run_level(l *Level) bool {
 		m = check_modes(user_mode, m)
 	}
 
-	fmt.Println(l.congrats_msg)
-	return true
+	myfmt.Println(l.congrats_msg)
+	return m
 }
 
 // Level 1: Very simple math. Should be able to be done in the person's head within 10 seconds.
 var level1 Level = Level{
-	"Congratulations, you passed!\nFlag:abcdefghijklmnop",
+	fmt.Sprintf("Congratulations, you passed!\n%s", level1Flag),
 	[]Challenge{
 		{"1+1", "2", 10000},
 		{"1+2", "3", 10000},
@@ -133,7 +144,7 @@ var level1 Level = Level{
 
 // Level 2: More difficult math with the same amount of time.
 var level2 Level = Level{
-	"Congratulations, you passed Level 2.\nFlag:1234\nLets speed things up.",
+	fmt.Sprintf("Congratulations, you passed Level 2.\n%s\nLets speed things up.", level2Flag),
 	[]Challenge{
 		{"595+434", "1029", 10000},
 		{"127+778", "905", 10000},
@@ -223,8 +234,8 @@ func gen_level7() *[]Challenge {
 		arg1 := i % 7
 		arg2 := i % 11
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
-		answer := fmt.Sprint(sum)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 10000})
 	}
 	return &output
@@ -242,8 +253,8 @@ func gen_level8() *[]Challenge {
 		arg1 := rand.Intn(97) + 1
 		arg2 := rand.Intn(98) + 1
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
-		answer := fmt.Sprint(sum)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 10000})
 	}
 	return &output
@@ -261,8 +272,8 @@ func gen_level9() *[]Challenge {
 		arg1 := rand.Intn(97) + 1
 		arg2 := rand.Intn(98) + 1
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
-		answer := fmt.Sprint(sum)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 2000})
 	}
 	return &output
@@ -285,7 +296,7 @@ func gen_level10_helper_meta() func(int) string {
 	var js_exit_str string = "throw new Error('Hm')"
 
 	var php_exit_q int = rand.Intn(100) + 300
-	var php_exit_str string = "die('Hm'"
+	var php_exit_str string = "die('Hm')"
 
 	var return_q int = rand.Intn(100) + 400
 	var reuturn_str string = "return"
@@ -319,37 +330,73 @@ func gen_level10() *[]Challenge {
 		arg1 := rand.Intn(97) + 1
 		arg2 := rand.Intn(98) + 1
 		sum := arg1 + arg2
-		question := fmt.Sprintf("%d+%d", arg1, arg2)
+		question := myfmt.Sprintf("%d+%d", arg1, arg2)
 		question = gen_level10_helper(i) + question
-		answer := fmt.Sprint(sum)
+		answer := myfmt.Sprint(sum)
 		output = append(output, Challenge{question, answer, 2000})
 	}
 	return &output
 }
 
 var level10 Level = Level{
-	"Congratulations, you passed Level 10!\nflag:1234567890",
+	"Congratulations, you passed Level 10!",
 	*gen_level10(),
 }
 
-func main() {
-	fmt.Println("Shell challenge. Beta 1")
-	_ = run_level(&level1)
+func level1_break() {
 	for i := 1; i <= 3; i++ {
+		//fmt.Scanln OK
 		fmt.Scanln()
 	}
-	fmt.Println("Oh, there's more here? Interesting....")
+	myfmt.Println("Oh, there's more here? Interesting....")
 	for i := 1; i <= 7; i++ {
+		//fmt.Scanln OK
 		fmt.Scanln()
 	}
-	fmt.Println("Let's start Level 2, I guess.")
-	_ = run_level(&level2)
-	_ = run_level(&level3)
-	_ = run_level(&level4)
-	_ = run_level(&level5)
-	_ = run_level(&level6)
-	_ = run_level(&level7)
-	_ = run_level(&level8)
-	_ = run_level(&level9)
-	_ = run_level(&level10)
+	myfmt.Println("Let's start Level 2, I guess.")
+}
+
+func main() {
+	myfmt.Println("Shell challenge. Beta 1")
+	var current_mode mode = run_level(&level1)
+	if current_mode == normal {
+		level1_break()
+	} else if current_mode == hexxed {
+		myfmt.Println("Ooh, you found the secret mode.")
+	} else if current_mode == slow {
+		myfmt.Println("Ooh, you found the secret mode.")
+	}
+	current_mode = check_modes(current_mode, run_level(&level2))
+	current_mode = check_modes(current_mode, run_level(&level3))
+	current_mode = check_modes(current_mode, run_level(&level4))
+	current_mode = check_modes(current_mode, run_level(&level5))
+	current_mode = check_modes(current_mode, run_level(&level6))
+	current_mode = check_modes(current_mode, run_level(&level7))
+	current_mode = check_modes(current_mode, run_level(&level8))
+	current_mode = check_modes(current_mode, run_level(&level9))
+	current_mode = check_modes(current_mode, run_level(&level10))
+
+	if current_mode == normal {
+		myfmt.Printf("Nice job! You won!\n%s\n", normalFlag)
+		myfmt.Println("Thanks for playing! Y'all come back now, you hear?")
+		// Psych them out by accepting any number of lines.
+		i := 0
+		for true {
+			fmt.Scanln() // Using fmt instead of myfmt because I don't want to log a bunch of blank lines.
+			i += 1
+			if i == 10 {
+				myfmt.Println("There's nothing else, I don't know what you're trying to do.")
+			} else if i == 100 {
+				myfmt.Println("Seriously, what do you want from me? You're done.")
+			} else if i == 1000 {
+				myfmt.Println("Really think that I'm going to reuse the same tricks?")
+			}
+		}
+	} else if current_mode == hexxed {
+		myfmt.Println("Congratulations on passing the secret mode!")
+		myfmt.Println(hexFlag)
+	} else if current_mode == slow {
+		myfmt.Println("Congratulations on passing the secret mode!")
+		myfmt.Println(slowFlag)
+	}
 }

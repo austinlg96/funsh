@@ -1,5 +1,7 @@
 main
 
-keys/*
+*.exe
 
 *image*.tar
+
+keys/*
