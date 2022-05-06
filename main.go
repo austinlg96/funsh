@@ -25,11 +25,11 @@ type flag string
 
 var (
 	flagFormat string = "flag{%s}"
-	level1Flag flag   = flag(fmt.Sprintf(flagFormat, "level1flag"))
-	level2Flag flag   = flag(fmt.Sprintf(flagFormat, "level2flag"))
-	normalFlag flag   = flag(fmt.Sprintf(flagFormat, "normalflag"))
-	slowFlag   flag   = flag(fmt.Sprintf(flagFormat, "slowflag"))
-	hexFlag    flag   = flag(fmt.Sprintf(flagFormat, "hexflag"))
+	level1Flag flag   = flag(fmt.Sprintf(flagFormat, "45a64053-7957-478d-b6f8-b0451c9497ae"))
+	level2Flag flag   = flag(fmt.Sprintf(flagFormat, "9740a5c8-1caa-421f-b9ed-8991da42be03"))
+	normalFlag flag   = flag(fmt.Sprintf(flagFormat, "f96dd31e-5971-42d3-9c56-762cbe0ce971"))
+	slowFlag   flag   = flag(fmt.Sprintf(flagFormat, "cc70c6ce-34b9-43d5-be04-2649ce60ab9f"))
+	hexFlag    flag   = flag(fmt.Sprintf(flagFormat, "cff5f4ea-f299-4323-9a69-6641544f027c"))
 )
 
 type Challenge struct {
