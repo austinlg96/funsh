@@ -1,12 +1,16 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
 )
+
+//go:embed NOTICE.txt
+var NOTICE string
 
 type mode string
 
@@ -357,7 +361,13 @@ func level1_break() {
 }
 
 func main() {
-	myfmt.Println("Shell challenge. Beta 1")
+
+	// Use NOTICE so that the compiler is forced to include it in the binary.
+	f, _ := os.OpenFile("/dev/null", os.O_APPEND, 0200)
+	f.WriteString(NOTICE)
+
+	// Actually start the game.
+	myfmt.Println("Pass my test and you shall be rewarded.")
 	var current_mode mode = run_level(&level1)
 	if current_mode == normal {
 		level1_break()
@@ -379,7 +389,7 @@ func main() {
 	if current_mode == normal {
 		myfmt.Printf("Nice job! You won!\n%s\n", normalFlag)
 		myfmt.Println("Thanks for playing! Y'all come back now, you hear?")
-		// Psych them out by accepting any number of lines.
+		// Psych them out by accepting any number of lines at the end.
 		i := 0
 		for true {
 			fmt.Scanln() // Using fmt instead of myfmt because I don't want to log a bunch of blank lines.
