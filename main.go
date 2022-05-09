@@ -366,7 +366,7 @@ func level1_break() {
 	}
 	myfmt.Println(hex_key)
 	fmt.Print(strings.Repeat("\n",50))
-	myfmt.Println("Let's start Level 2, I guess.")
+
 }
 
 func main() {
@@ -378,8 +378,9 @@ func main() {
 	// Actually start the game.
 	myfmt.Println("Pass my test and you shall be rewarded.")
 	var current_mode mode = run_level(&level1)
+	level1_break()
 	if current_mode == normal {
-		level1_break()
+		myfmt.Println("Let's start Level 2, I guess.")
 	} else if current_mode == hexxed {
 		myfmt.Println("Ooh, you found the secret mode.")
 	} else if current_mode == slow {
