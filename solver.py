@@ -34,6 +34,7 @@ def process_stdout(stdout: str, mode: str) -> str:
         if mode =="hex":
             response = response * 6
         if mode == "slow":
+            # Used time.sleep() instead of asyncio.sleep() because this blocking prevents get_question() from raising the TimeoutError.
             time.sleep(30)
         stdin = f"{response}\n"
     return stdin
