@@ -1,5 +1,10 @@
 main
 
+async.py
+
+output.txt
+shell_log.txt
+
 *.exe
 
 *image*.tar
